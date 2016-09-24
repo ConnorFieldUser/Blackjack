@@ -42,16 +42,17 @@ class Player:
 
 
 def player_turn():
-    hit_or_stand = input("HIT or STAND? ").lower
-    if hit_or_stand == "hit":
-        # return player.hit(new_deck)
-        # print(player.hand_value)
-        print("testing")
-    elif hit_or_stand == "stand":
-        pass
-    else:
-        print("HIT or STAND? ")
-        player_turn()
+    while True:
+        hit_or_stand = input("HIT or STAND? ").lower
+        if hit_or_stand == "hit":
+            # return player.hit(new_deck)
+            # print(player.hand_value)
+            print("testing")
+            continue
+        elif hit_or_stand == "stand":
+            break
+        else:
+            continue
 
 
 # IMPORTANT
