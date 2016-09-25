@@ -35,9 +35,9 @@ class Player:
         self.hand.append(mydeck.deck.pop(0))
         if self.hand[-1][1] == "jack":
             self.hand_value += 10
-        if self.hand[-1][1] == "queen":
+        elif self.hand[-1][1] == "queen":
             self.hand_value += 10
-        if self.hand[-1][1] == "king":
+        elif self.hand[-1][1] == "king":
             self.hand_value += 10
         else:
             self.hand_value += self.hand[-1][1]
@@ -47,7 +47,14 @@ class Player:
 
     def hole(self, mydeck):
         self.hand.append(mydeck.deck.pop(0))
-        self.hand_value += self.hand[-1][1]
+        if self.hand[-1][1] == "jack":
+            self.hand_value += 10
+        elif self.hand[-1][1] == "queen":
+            self.hand_value += 10
+        elif self.hand[-1][1] == "king":
+            self.hand_value += 10
+        else:
+            self.hand_value += self.hand[-1][1]
 
 
 #########################
@@ -68,7 +75,7 @@ def player_turn(player, mydeck):
                 print("BUST")
                 break
         elif hit_or_stand == "stand":
-            # print(player.get_value())
+            print("Your hand:")
             break
         else:
             continue
@@ -84,9 +91,7 @@ def dealer_turn(dealer, mydeck):
             # print(dealer.hand)
             print("Drawing...")
             dealer.hit(mydeck)
-    else:
-        print(dealer.hand)
-    if dealer.hand_value > 21:
+    elif dealer.hand_value > 21:
         print("BUST")
 
 
@@ -122,40 +127,63 @@ def setup():
     player_turn(player, new_deck)
 
     dealer_turn(dealer, new_deck)
-
-    if player.hand_value > 21:
-        return False
-    else:
-        winner(player, dealer)
-        return True
+    # if player.hand_value > 21:
+    #     return False
+    # else:
+    winner(player, dealer)
+    # return True
 
 
 def winner(player, dealer):
 
-    if player.hand_value == dealer.hand_value:
-        print()
+    if player.hand_value == dealer.hand_value and player.hand == 2:
+        print("player blackjack! player wins")
+        # player.money += 30
+
+    elif player.hand_value == dealer.hand_value and dealer.hand == 2:
+        print("dealer blackjack! dealer wins")
+        # player.money -= 10
+
+    elif player.hand_value == dealer.hand_value:
+        print("It is a draw")
 
     elif player.hand_value > 21 and dealer.hand_value > 21:
         print("Double bust: no winners")
 
-    elif player.hand_value > dealer.hand_value and player.hand_value < 22:
+    elif player.hand_value > dealer.hand_value and player.hand_value < 22 or \
+            player.hand_value < dealer.hand_value and dealer.hand_value > 21:
         print("\ndealer hand:")
         print(dealer.hand)
         print(dealer.hand_value)
         print("PLAYER WINS!")
+        # player.money += 10
 
-    elif dealer.hand_value > player.hand_value and dealer.hand_value < 22:
+    elif player.hand_value < dealer.hand_value and dealer.hand_value < 22 or \
+            player.hand_value > dealer.hand_value and player.hand_value > 21:
         print("\ndealer hand:")
         print(dealer.hand)
         print(dealer.hand_value)
         print("DEALER WINS")
+        # player.money -= 10
+
+    else:
+        print("Bug!?!")
+
+    print("Your total is ${}".format(player.money))
 
 
 def game():
     playing = True
     while playing:
         playing = setup()
-        playing = False
+        ask = input("Play again? y/N: ").lower()
+        if ask == "y":
+            # play again
+            playing = True
+        elif ask == "n":
+            playing = False
+        else:
+            playing = False
     else:
         print("\nThanks for playing")
 
