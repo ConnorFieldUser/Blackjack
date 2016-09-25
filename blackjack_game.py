@@ -11,8 +11,8 @@ from random import shuffle
 class Deck:
     def __init__(self):
         suits = ["clubs", "hearts", "spades", "diamonds"]
-        card_nums = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-        # card_nums = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"]
+        # card_nums = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+        card_nums = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"]
         self.deck = [(suit, card) for suit in suits for card in card_nums]
 
 
@@ -22,6 +22,9 @@ class Player:
         self.hand = []
         self.hand_value = 0
 
+    def get_value(self):
+        return self.hand_value
+
 # take tuple index1
 # from
 # add to hand value
@@ -30,9 +33,22 @@ class Player:
 
     def hit(self, mydeck):
         self.hand.append(mydeck.deck.pop(0))
-        self.hand_value += self.hand[-1][1]
+        if self.hand[-1][1] == "jack":
+            self.hand_value += 10
+        if self.hand[-1][1] == "queen":
+            self.hand_value += 10
+        if self.hand[-1][1] == "king":
+            self.hand_value += 10
+        else:
+            self.hand_value += self.hand[-1][1]
         print(self.hand)
         print(self.hand_value)
+        # don't forget to add a face card value translator
+
+    def hole(self, mydeck):
+        self.hand.append(mydeck.deck.pop(0))
+        self.hand_value += self.hand[-1][1]
+
 
 #########################
 # class Card:
@@ -41,18 +57,37 @@ class Player:
 #         self.num = num
 
 
-def player_turn():
+def player_turn(player, mydeck):
     while True:
-        hit_or_stand = input("HIT or STAND? ").lower
+        hit_or_stand = input("\nHIT or STAND? ").lower()
         if hit_or_stand == "hit":
-            # return player.hit(new_deck)
-            # print(player.hand_value)
-            print("testing")
-            continue
+            player.hit(mydeck)
+            if player.hand_value < 21:
+                continue
+            else:
+                print("BUST")
+                break
         elif hit_or_stand == "stand":
+            # print(player.get_value())
             break
         else:
             continue
+
+
+def dealer_turn(dealer, mydeck):
+    print("\ndealers turn:")
+    print("revealing hole card:")
+    print(dealer.hand)
+    print(dealer.hand_value)
+    if dealer.hand_value < 17:
+        while dealer.hand_value < 17:
+            # print(dealer.hand)
+            print("Drawing...")
+            dealer.hit(mydeck)
+    else:
+        print(dealer.hand)
+    if dealer.hand_value > 21:
+        print("BUST")
 
 
 # IMPORTANT
@@ -64,26 +99,65 @@ def setup():
     player = Player()
     dealer = Player()
     # print(new_deck.deck)
-    print("Welcome to blackjack")
+    print("Welcome to blackjack\n")
+
+    print("Dealer hand:")
+    dealer.hit(new_deck)
+    dealer.hole(new_deck)
+    if dealer.hand_value == 21:
+        print("Dealer blackjack!")
+        print(dealer.hand)
+    else:
+        print("?????????????")
+        print("??hole card??")
+        print("?????????????")
+
+    print("\nYour hand:")
     player.hit(new_deck)
     player.hit(new_deck)
+    if player.hand_value == 21:
+        print("player blackjack!")
     # print(player.hand_value)
 
-    player_turn()
+    player_turn(player, new_deck)
 
-    if player.hand_value == 21:
+    dealer_turn(dealer, new_deck)
+
+    if player.hand_value > 21:
         return False
     else:
+        winner(player, dealer)
         return True
 
 
-# IMPORTANT
+def winner(player, dealer):
 
-# def game()
-playing = True
-while playing:
-    playing = setup()
-    playing = False
+    if player.hand_value == dealer.hand_value:
+        print()
+
+    elif player.hand_value > 21 and dealer.hand_value > 21:
+        print("Double bust: no winners")
+
+    elif player.hand_value > dealer.hand_value and player.hand_value < 22:
+        print("\ndealer hand:")
+        print(dealer.hand)
+        print(dealer.hand_value)
+        print("PLAYER WINS!")
+
+    elif dealer.hand_value > player.hand_value and dealer.hand_value < 22:
+        print("\ndealer hand:")
+        print(dealer.hand)
+        print(dealer.hand_value)
+        print("DEALER WINS")
 
 
-# print(new_deck.deck)
+def game():
+    playing = True
+    while playing:
+        playing = setup()
+        playing = False
+    else:
+        print("\nThanks for playing")
+
+
+game()
