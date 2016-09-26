@@ -144,11 +144,11 @@ def setup():
 
 def winner(player, dealer):
 
-    if player.hand_value == dealer.hand_value and len(player.hand) == 2:
+    if player.hand_value == 21 and dealer.hand_value == 21 and len(player.hand) == 2:
         print("player blackjack! player wins")
         # player.money += 30
 
-    elif player.hand_value == dealer.hand_value and len(dealer.hand) == 2:
+    elif player.hand_value == 21 and dealer.hand_value == 21 and len(dealer.hand) == 2:
         print("dealer blackjack! dealer wins")
         # player.money -= 10
 
