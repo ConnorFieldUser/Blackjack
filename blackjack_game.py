@@ -1,24 +1,16 @@
 from random import shuffle
 
-# class Card:
-#     def __init__(self, suit, num):
-#         self.suit = suit
-#         self.nnum = num
-
-# def add_to_deck():
-
 
 class Deck:
     def __init__(self):
         suits = ["clubs", "hearts", "spades", "diamonds"]
-        # card_nums = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-        card_nums = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"]
+        card_nums = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"]
         self.deck = [(suit, card) for suit in suits for card in card_nums]
 
 
 class Player:
     def __init__(self):
-        self.money = 100
+        # self.money = 100
         self.hand = []
         self.hand_value = 0
 
@@ -39,8 +31,16 @@ class Player:
             self.hand_value += 10
         elif self.hand[-1][1] == "king":
             self.hand_value += 10
+        elif self.hand[-1][1] == "ace":
+            self.hand_value += 11
         else:
             self.hand_value += self.hand[-1][1]
+
+        if self.hand_value > 21:
+            for card in self.hand:
+                if card[1] == "ace":
+                    self.hand_value -= 10
+                    print("switching ace to 1")
         print(self.hand)
         print(self.hand_value)
         # don't forget to add a face card value translator
@@ -53,8 +53,16 @@ class Player:
             self.hand_value += 10
         elif self.hand[-1][1] == "king":
             self.hand_value += 10
+        elif self.hand[-1][1] == "ace":
+            self.hand_value += 11
         else:
             self.hand_value += self.hand[-1][1]
+
+        if self.hand_value > 21:
+            for card in self.hand:
+                if card[1] == "ace":
+                    self.hand_value -= 10
+                    print("switching ace to 1")
 
 
 #########################
@@ -136,11 +144,11 @@ def setup():
 
 def winner(player, dealer):
 
-    if player.hand_value == dealer.hand_value and player.hand == 2:
+    if player.hand_value == dealer.hand_value and len(player.hand) == 2:
         print("player blackjack! player wins")
         # player.money += 30
 
-    elif player.hand_value == dealer.hand_value and dealer.hand == 2:
+    elif player.hand_value == dealer.hand_value and len(dealer.hand) == 2:
         print("dealer blackjack! dealer wins")
         # player.money -= 10
 
@@ -169,7 +177,7 @@ def winner(player, dealer):
     else:
         print("Bug!?!")
 
-    print("Your total is ${}".format(player.money))
+    # print("Your total is ${}".format(player.money))
 
 
 def game():
