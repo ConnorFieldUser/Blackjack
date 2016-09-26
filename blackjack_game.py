@@ -36,8 +36,8 @@ class Player:
         else:
             self.hand_value += self.hand[-1][1]
 
-        if self.hand_value > 21:
-            for card in self.hand:
+        for card in self.hand:
+            if self.hand_value > 21:
                 if card[1] == "ace":
                     self.hand_value -= 10
                     print("switching ace to 1")
